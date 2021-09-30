@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "mtg_proxy"
+version = "0.1.0"
+description = ""
+authors = ["reonyanarticle <reonaarticles@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+mtgsdk = "^1.3.1"
+tqdm = "^4.62.3"
+more-itertools = "^8.10.0"
+click = "^8.0.1"
+reportlab = "^3.6.1"
+Pillow = "^8.3.2"
+
+[tool.poetry.dev-dependencies]
+black = "^21.9b0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
