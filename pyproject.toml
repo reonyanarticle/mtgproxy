@@ -1,3 +1,7 @@
+[tool.black]
+line-length = 120
+target-version = ['py39']
+
 [tool.poetry]
 name = "mtg_proxy"
 version = "0.1.0"
