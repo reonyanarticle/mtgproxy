@@ -10,10 +10,15 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from more_itertools import chunked
 from time import sleep
+
+
 def _read_txt(file_name: str) -> list[str]:
     with open(file_name, "r") as f:
-        texts : list[str] = [s.strip() for s in f.readlines() if ((len(s.strip()) > 0) and (s.strip() not in STOP_WORDS))]
+        texts: list[str] = [
+            s.strip() for s in f.readlines() if ((len(s.strip()) > 0) and (s.strip() not in STOP_WORDS))
+        ]
     return texts
+
 
 def _find_card_url_by_name(name: str, language: str):
     sleep(2.0)
@@ -29,6 +34,7 @@ def _find_card_url_by_name(name: str, language: str):
             if card.image_url != None:
                 return card.image_url
         return None
+
 
 def _texts_data_to_jsons(texts: list[str]) -> list[CardBody]:
     print("==== Get card information from text data. ====")
@@ -59,14 +65,17 @@ def _texts_data_to_jsons(texts: list[str]) -> list[CardBody]:
     print("===== The card information has been downloaded. =====")
     return jsons
 
+
 def __normalize_image(image: Image.Image) -> Image.Image:
     width: int = 185
     height: int = 257
     image_width, image_height = image.size
     width_reduction_rate: float = width / image_width
     height_reduction_rate: float = height / image_height
-    image = image.convert('RGB')
-    image = image.resize((int(image_width * width_reduction_rate),int(image_height* height_reduction_rate)), Image.NEAREST)
+    image = image.convert("RGB")
+    image = image.resize(
+        (int(image_width * width_reduction_rate), int(image_height * height_reduction_rate)), Image.NEAREST
+    )
     return image
 
 
@@ -87,11 +96,12 @@ def __arrange_imgs(pdf: canvas.Canvas, imgs: list[Image.Image]) -> None:
             if index == len(imgs):
                 break
             else:
-                pdf.drawInlineImage(imgs[index], img_width*row + margin*(row + 1),
-                                    img_height*collum + margin*(collum + 1))
+                pdf.drawInlineImage(
+                    imgs[index], img_width * row + margin * (row + 1), img_height * collum + margin * (collum + 1)
+                )
                 index += 1
         else:
-           continue
+            continue
         break
     return None
 
@@ -109,7 +119,7 @@ def _create_print_pdf(jsons: list[CardBody], save_name: str) -> None:
     if save_name[-3:] != "pdf":
         save_name = save_name + ".pdf"
 
-    chunked_imgs: list[list[Image.Image]] = list(chunked(imgs,9))
+    chunked_imgs: list[list[Image.Image]] = list(chunked(imgs, 9))
     pdf: canvas.Canvas = canvas.Canvas(save_name, pagesize=A4)
     for i in range(len(chunked_imgs)):
         if i != 0:
