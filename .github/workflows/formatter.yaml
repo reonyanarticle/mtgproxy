@@ -26,8 +26,6 @@ jobs:
         run: poetry install --no-interaction
       - name: black
         run: poetry run black .
-      - name: autoflake
-        run: poetry run autoflake -r .
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
           commit_message: Apply Code Formatter Change
