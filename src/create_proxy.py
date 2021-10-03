@@ -73,8 +73,7 @@ def __normalize_image(image: Image.Image) -> Image.Image:
     width_reduction_rate: float = width / image_width
     height_reduction_rate: float = height / image_height
     image = image.convert("RGB")
-    image = image.resize(
-        (int(image_width * width_reduction_rate), int(image_height * height_reduction_rate)))
+    image = image.resize((int(image_width * width_reduction_rate), int(image_height * height_reduction_rate)))
     return image
 
 
@@ -100,7 +99,7 @@ def __arrange_imgs(pdf: canvas.Canvas, imgs: list[Image.Image]) -> None:
                 )
                 pdf.setFontSize(20)
                 pdf.setFillColor(white)
-                pdf.drawString(img_width*row + 30, img_height*collum + 150, 'Proxy')
+                pdf.drawString(img_width * row + 30, img_height * collum + 150, "Proxy")
                 index += 1
         else:
             continue
