@@ -1,4 +1,3 @@
-from os import write
 import re
 from mtgsdk import Card
 from commons import ENGLISH_CONDITION, STOP_WORDS, TRANSLATE_CONDITION, CardBody
@@ -10,6 +9,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from more_itertools import chunked
 from time import sleep
+from reportlab.lib.colors import white
 
 
 def _read_txt(file_name: str) -> list[str]:
@@ -73,9 +73,7 @@ def __normalize_image(image: Image.Image) -> Image.Image:
     width_reduction_rate: float = width / image_width
     height_reduction_rate: float = height / image_height
     image = image.convert("RGB")
-    image = image.resize(
-        (int(image_width * width_reduction_rate), int(image_height * height_reduction_rate)), Image.NEAREST
-    )
+    image = image.resize((int(image_width * width_reduction_rate), int(image_height * height_reduction_rate)))
     return image
 
 
@@ -99,6 +97,9 @@ def __arrange_imgs(pdf: canvas.Canvas, imgs: list[Image.Image]) -> None:
                 pdf.drawInlineImage(
                     imgs[index], img_width * row + margin * (row + 1), img_height * collum + margin * (collum + 1)
                 )
+                pdf.setFontSize(20)
+                pdf.setFillColor(white)
+                pdf.drawString(img_width * row + 30, img_height * collum + 150, "Proxy")
                 index += 1
         else:
             continue
