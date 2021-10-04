@@ -1,12 +1,14 @@
-[tool.black]
-line-length = 120
-target-version = ['py39']
-
 [tool.poetry]
 name = "mtg_proxy"
 version = "0.1.0"
 description = ""
 authors = ["reonyanarticle <reonaarticles@gmail.com>"]
+packages = [
+    {include="src"}
+]
+
+[tool.poetry.scripts]
+mtgproxy = "src.command:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -19,6 +21,10 @@ Pillow = "^8.3.2"
 
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
