@@ -1,6 +1,6 @@
 import re
 from mtgsdk import Card
-from commons import ENGLISH_CONDITION, STOP_WORDS, TRANSLATE_CONDITION, CardBody
+from .commons import ENGLISH_CONDITION, STOP_WORDS, TRANSLATE_CONDITION, CardBody
 from tqdm.auto import tqdm
 import urllib
 from PIL import Image

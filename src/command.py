@@ -1,5 +1,5 @@
 import click
-from create_proxy import create_proxy
+from .create_proxy import create_proxy
 
 
 @click.command()
