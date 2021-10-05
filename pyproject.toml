@@ -1,8 +1,11 @@
 [tool.poetry]
-name = "mtg_proxy"
+name = "mtgproxy"
 version = "0.1.0"
-description = ""
+description = "This is the scripts for automatically creating a proxy from the deck list."
+license = "MIT License"
 authors = ["reonyanarticle <reonaarticles@gmail.com>"]
+repository = "https://github.com/reonyanarticle/mtg_proxy"
+readme = "README.md"
 packages = [
     {include="src"}
 ]
