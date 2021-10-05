@@ -1,4 +1,4 @@
-# MTG_PROXY
+# MTGPROXY
 
 This is the scripts for automatically creating a proxy from the deck list.
 
