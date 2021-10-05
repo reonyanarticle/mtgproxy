@@ -37,8 +37,8 @@ pip install mtgproxy
 Using poetry:
 
 ```sh
-git clone git@github.com:reonyanarticle/mtg_proxy.git
-cd mtg_proxy
+git clone git@github.com:reonyanarticle/mtgproxy.git
+cd mtgproxy
 poetry install
 ```
 
