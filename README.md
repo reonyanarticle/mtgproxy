@@ -1,6 +1,6 @@
 # MTGPROXY
 
-This is the scripts for automatically creating a proxy from the deck list.
+These are scripts for automatically creating proxy card images given a deck list.
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ Please check [poetry.lock](https://github.com/reonyanarticle/mtg_proxy/blob/main
 
 #### Note
 
-I only checked it on Mac OS, so if there is a problem on Windows or Linux, I would appreciate it if you could issue a report.
+I have only confirmed that it works on Mac OS, so if you find any problems on Windows or Linux, I would appreciate it if you could report them.
 
 ### Installing
 
@@ -46,7 +46,7 @@ Please check [here](https://github.com/python-poetry/poetry) for how to use poet
 
 ### Executing program
 
-To run directly from a file:
+To run directly from the script file:
 
 ```sh
 python src/commamd.py --decklist foo.txt
