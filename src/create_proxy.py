@@ -41,6 +41,56 @@ def _read_txt(file_name: str) -> list[str]:
     return texts
 
 
+def _search_card_name_by_language(language: str, card: Card) -> str:
+    """
+    Search for the card name registered in the API.
+
+    Parameters
+    ----------
+    language : str
+        The language of the card name you want to search.
+    card : Card
+        Card information registered in mtgsdk.
+
+    Returns
+    -------
+    str
+        The card name registered in the API.
+    """
+    language_card_info: dict[str, str] = [info for info in card.foreign_names if info["language"] == language][0]
+    return language_card_info["name"]
+
+
+def _is_same_card_name(name: str, language: str, card: Card) -> bool:
+    """
+    It is determined whether the inputted card name is the same as the registered card name.
+
+    Parameters
+    ----------
+    name : str
+        The inputted card name.
+    language : str
+        The language of the card name you want to search.
+    card : Card
+        Card information registered in mtgsdk.
+
+    Returns
+    -------
+    bool
+        True: The inputted card name is the same as the card name registered in the API.
+        False: Otherwise.
+    """
+    if language == "English":
+        card_name: str = card.name
+    else:
+        card_name = _search_card_name_by_language(language=language, card=card)
+
+    if name == card_name:
+        return True
+    else:
+        return False
+
+
 def _find_card_url_by_name(name: str, language: str) -> Optional[str]:
     """
     Search for URL link for the card image.
@@ -58,12 +108,15 @@ def _find_card_url_by_name(name: str, language: str) -> Optional[str]:
         The URL link of card image. If it does not exist, None is returned.
     """
     sleep(1.0)
-    if language == "english":
+    if language == "English":
         cards: list = Card.where(name=name).all()
     else:
         cards = Card.where(name=name).where(language=language).all()
-    if len(cards) == 0:
-        print(f"Could not find image for {name}.")
+
+    checked_cards: list = [card for card in cards if _is_same_card_name(name=name, language=language, card=card)]
+
+    if len(checked_cards) == 0:
+        tqdm.write(f"Could not find image for {name}.")
         return None
     else:
         for card in cards:
@@ -96,16 +149,16 @@ def _texts_data_to_jsons(texts: list[str]) -> list[CardBody]:
         # Wisdom Guildのデータかどうかの確認。
         if re.search(TRANSLATE_CONDITION, text) is not None:
             card_info["name"] = re.search(TRANSLATE_CONDITION, text).group()
-            card_info["language"] = "japanese"
+            card_info["language"] = "Japanese"
         else:
             # MTG Arenaからインポートしたデッキで英語かどうかの確認。
             if re.match(ENGLISH_CONDITION, text):
                 card_info["name"] = text[2:]
-                card_info["language"] = "english"
+                card_info["language"] = "English"
             else:
                 words: list[str] = text.split(" ")
                 card_info["name"] = words[1]
-                card_info["language"] = "japanese"
+                card_info["language"] = "Japanese"
 
         image_url = _find_card_url_by_name(name=card_info["name"], language=card_info["language"])
         if image_url is None:
@@ -118,7 +171,7 @@ def _texts_data_to_jsons(texts: list[str]) -> list[CardBody]:
     return jsons
 
 
-def __normalize_image(image: Image.Image) -> Image.Image:
+def _normalize_image(image: Image.Image) -> Image.Image:
     """
     Adjust the size of the image.
 
@@ -142,7 +195,7 @@ def __normalize_image(image: Image.Image) -> Image.Image:
     return image
 
 
-def __url_to_jpeg(image_url: str) -> Image.Image:
+def _url_to_jpeg(image_url: str) -> Image.Image:
     """
     Convert URL to image.
 
@@ -158,11 +211,11 @@ def __url_to_jpeg(image_url: str) -> Image.Image:
     """
     bytes_data: bytes = urllib.request.urlopen(image_url).read()
     img: Image.Image = Image.open(io.BytesIO(bytes_data))
-    img = __normalize_image(image=img)
+    img = _normalize_image(image=img)
     return img
 
 
-def __arrange_imgs(pdf: canvas.Canvas, imgs: list[Image.Image]) -> None:
+def _arrange_imgs(pdf: canvas.Canvas, imgs: list[Image.Image]) -> None:
     """
     Arrange images neatly on pdf.
 
@@ -211,9 +264,9 @@ def _create_print_pdf(jsons: list[CardBody], save_name: str) -> None:
     for json in tqdm(jsons):
         image_url: str = json["image_url"]
         if image_url == "":
-            print(f"{json['name']}は画像をダウンロードすることができませんでした。")
+            tqdm.write(f"{json['name']}は画像をダウンロードすることができませんでした。")
         else:
-            imgs += [__url_to_jpeg(image_url=image_url) for _ in range(json["number"])]
+            imgs += [_url_to_jpeg(image_url=image_url) for _ in range(json["number"])]
 
     if save_name[-3:] != "pdf":
         save_name = save_name + ".pdf"
@@ -224,7 +277,7 @@ def _create_print_pdf(jsons: list[CardBody], save_name: str) -> None:
         if i != 0:
             pdf.showPage()
 
-        __arrange_imgs(pdf=pdf, imgs=chunked_imgs[i])
+        _arrange_imgs(pdf=pdf, imgs=chunked_imgs[i])
     pdf.save()
     print("===== Proxy data creation succeeded. =====")
     return None
