@@ -40,8 +40,9 @@ def _read_txt(file_name: str) -> list[str]:
 
     return texts
 
+
 def _search_card_name_by_language(language: str, card: Card) -> str:
-    '''
+    """
     Search for the card name registered in the API.
 
     Parameters
@@ -55,13 +56,13 @@ def _search_card_name_by_language(language: str, card: Card) -> str:
     -------
     str
         The card name registered in the API.
-    '''
-    language_card_info: dict[str, str] = [info for info in card.foreign_names if info["language"] == language ][0]
+    """
+    language_card_info: dict[str, str] = [info for info in card.foreign_names if info["language"] == language][0]
     return language_card_info["name"]
 
 
 def _is_same_card_name(name: str, language: str, card: Card) -> bool:
-    '''
+    """
     It is determined whether the inputted card name is the same as the registered card name.
 
     Parameters
@@ -78,7 +79,7 @@ def _is_same_card_name(name: str, language: str, card: Card) -> bool:
     bool
         True: The inputted card name is the same as the card name registered in the API.
         False: Otherwise.
-    '''
+    """
     if language == "English":
         card_name: str = card.name
     else:
