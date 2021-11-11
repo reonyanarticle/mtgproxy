@@ -82,7 +82,9 @@ def _is_same_card_name(name: str, language: str, card: Card) -> bool:
     if language == "English":
         card_name: str = card.name
     else:
-        card_name = _search_card_name_by_language(language=language, card=card)
+        # 本当はここでも同じように名前があっているか調べたいが、両面ランドとか調べるのがとても大変なのでやめます。
+        # 英語の場合のみ同名かどうか調べるようにします。
+        return True
 
     if name == card_name:
         return True
